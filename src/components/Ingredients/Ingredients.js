@@ -1,13 +1,21 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import store, { UPDATE_INGREDIENTS } from "../../store";
 
 class Ingredients extends Component {
   constructor(props) {
     super(props);
+    const st8 = store.getState();
     this.state = {
-      ingredients: [],
+      ingredients: st8.ingredients,
       input: ""
     };
+  }
+  componentDidMount(){
+    store.subscribe(() => {
+      const st8 = store.getState()
+      this.setState({ingredients: st8.ingredients})
+    })
   }
   handleChange(val) {
     this.setState({
@@ -15,7 +23,10 @@ class Ingredients extends Component {
     });
   }
   addIngredient() {
-    // Send data to Redux state
+    store.dispatch({
+      type: UPDATE_INGREDIENTS,
+      payload: this.state.input
+    })
     this.setState({
       input: ""
     });
